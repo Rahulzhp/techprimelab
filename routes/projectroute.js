@@ -37,35 +37,95 @@ projectRoute.get("/", async (req, res) => {
         res.send(err);
     }
 });
+
 projectRoute.get("/sort/high", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
     try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
         const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
             {
                 $addFields: {
                     priorityOrder: {
                         $switch: {
                             branches: [
-                                { case: { $eq: ['$priority', 'High'] }, then: 0 },
-                                { case: { $eq: ['$priority', 'Medium'] }, then: 1 },
-                                { case: { $eq: ['$priority', 'Low'] }, then: 2 }
+                                { case: { $eq: ["$priority", "High"] }, then: 0 },
+                                { case: { $eq: ["$priority", "Medium"] }, then: 1 },
+                                { case: { $eq: ["$priority", "Low"] }, then: 2 },
                             ],
-                            default: 3
-                        }
-                    }
-                }
+                            default: 3,
+                        },
+                    },
+                },
             },
-            { $sort: { priorityOrder: 1 } }
-        ]);
+            { $sort: { priorityOrder: 1 } },
+        ])
+            .skip(skip)
+            .limit(PAGE_SIZE);
 
-        res.send(data);
+        res.send({ data, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send("An error occurred");
     }
 });
+
+
+
 projectRoute.get("/sort/low", async (req, res) => {
+
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
     try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
         const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
             {
                 $addFields: {
                     priorityOrder: {
@@ -80,18 +140,45 @@ projectRoute.get("/sort/low", async (req, res) => {
                     }
                 }
             },
-            { $sort: { priorityOrder: 1 } }
-        ]);
-
-        res.send(data);
+            { $sort: { priorityOrder: 1 } },
+        ])
+            .skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send("An error occurred");
     }
 });
 projectRoute.get("/sort/medium", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
     try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
         const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
             {
                 $addFields: {
                     priorityOrder: {
@@ -107,9 +194,170 @@ projectRoute.get("/sort/medium", async (req, res) => {
                 }
             },
             { $sort: { priorityOrder: 1 } }
-        ]);
+        ]).skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred");
+    }
+});
 
-        res.send(data);
+
+projectRoute.get("/status/running", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
+    try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
+        const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
+            {
+                $addFields: {
+                    priorityOrder: {
+                        $switch: {
+                            branches: [
+                                { case: { $eq: ['$status', 'Running'] }, then: 0 },
+                                { case: { $eq: ['$status', 'Closed'] }, then: 1 },
+                                { case: { $eq: ['$status', 'Cancelled'] }, then: 2 }
+                            ],
+                            default: 3
+                        }
+                    }
+                }
+            },
+            { $sort: { priorityOrder: 1 } }
+        ]).skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred");
+    }
+});
+
+
+projectRoute.get("/status/close", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
+    try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
+        const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
+            {
+                $addFields: {
+                    priorityOrder: {
+                        $switch: {
+                            branches: [
+                                { case: { $eq: ['$status', 'Closed'] }, then: 0 },
+                                { case: { $eq: ['$status', 'Running'] }, then: 1 },
+                                { case: { $eq: ['$status', 'Cancelled'] }, then: 2 }
+                            ],
+                            default: 3
+                        }
+                    }
+                }
+            },
+            { $sort: { priorityOrder: 1 } }
+        ]).skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred");
+    }
+});
+
+projectRoute.get("/status/cancel", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
+    try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
+        const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
+            {
+                $addFields: {
+                    priorityOrder: {
+                        $switch: {
+                            branches: [
+                                { case: { $eq: ['$status', 'Cancelled'] }, then: 0 },
+                                { case: { $eq: ['$status', 'Closed'] }, then: 1 },
+                                { case: { $eq: ['$status', 'Running'] }, then: 2 }
+                            ],
+                            default: 3
+                        }
+                    }
+                }
+            },
+            { $sort: { priorityOrder: 1 } }
+        ]).skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send("An error occurred");
@@ -117,17 +365,43 @@ projectRoute.get("/sort/medium", async (req, res) => {
 });
 
 projectRoute.get("/start/date", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
     try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
         const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
             {
                 $sort: {
                     start_date: 1, // Sort by start date in ascending order
                     // If start dates are the same, sort by end date in ascending order
                 },
             },
-        ]);
-
-        res.send(data);
+        ]).skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send("An error occurred");
@@ -135,17 +409,43 @@ projectRoute.get("/start/date", async (req, res) => {
 });
 
 projectRoute.get("/end/date", async (req, res) => {
+    const { page = 1, search } = req.query;
+    const skip = (page - 1) * PAGE_SIZE;
     try {
+        let filter = {};
+        if (search) {
+            filter = {
+                $or: [
+                    { project_theme: { $regex: search, $options: "i" } },
+                    { reason: { $regex: search, $options: "i" } },
+                    { type: { $regex: search, $options: "i" } },
+                    { division: { $regex: search, $options: "i" } },
+                    { category: { $regex: search, $options: "i" } },
+                    { priority: { $regex: search, $options: "i" } },
+                    { department: { $regex: search, $options: "i" } },
+                    { start_date: { $regex: search, $options: "i" } },
+                    { end_date: { $regex: search, $options: "i" } },
+                    { location: { $regex: search, $options: "i" } },
+                    { status: { $regex: search, $options: "i" } },
+                ],
+            };
+        }
+        const count = await ProjectModel.find(filter).countDocuments();
+        const totalPages = Math.ceil(count / PAGE_SIZE);
+
         const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            },
             {
                 $sort: {
                     // Sort by start date in ascending order
                     end_date: 1// If start dates are the same, sort by end date in ascending order
                 },
             },
-        ]);
-
-        res.send(data);
+        ]).skip(skip)
+            .limit(PAGE_SIZE);
+        res.send({ data, totalPages });
     } catch (error) {
         console.error(error);
         res.status(500).send("An error occurred");
