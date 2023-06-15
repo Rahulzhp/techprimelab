@@ -9,26 +9,30 @@ projectRoute.get("/", async (req, res) => {
     const skip = (page - 1) * PAGE_SIZE;
 
     try {
-        const query = {
-            $or: [
-                { project_theme: { $regex: search, $options: "i" } },
-                { reason: { $regex: search, $options: "i" } },
-                { type: { $regex: search, $options: "i" } },
-                { division: { $regex: search, $options: "i" } },
-                { category: { $regex: search, $options: "i" } },
-                { priority: { $regex: search, $options: "i" } },
-                { department: { $regex: search, $options: "i" } },
-                { start_date: { $regex: search, $options: "i" } },
-                { end_date: { $regex: search, $options: "i" } },
-                { location: { $regex: search, $options: "i" } },
-                { status: { $regex: search, $options: "i" } },
-            ],
-        };
+        let filter = {};
+        if (search) {
+            filter.project_theme = { $regex: search, $options: 'i' };
+            filter.reason = { $regex: search, $options: 'i' };
+            filter.type = { $regex: search, $options: 'i' };
+            filter.division = { $regex: search, $options: 'i' };
+            filter.category = { $regex: search, $options: 'i' };
+            filter.priority = { $regex: search, $options: 'i' };
+            filter.department = { $regex: search, $options: 'i' };
+            filter.start_date = { $regex: search, $options: 'i' };
+            filter.end_date = { $regex: search, $options: 'i' };
+            filter.location = { $regex: search, $options: 'i' };
+            filter.status = { $regex: search, $options: 'i' };
 
-        const count = await ProjectModel.countDocuments(query);
+        }
+
+        const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
-        const data = await ProjectModel.find(query)
+        const data = await ProjectModel.aggregate([
+            {
+                $match: filter,
+            }
+        ])
             .skip(skip)
             .limit(PAGE_SIZE);
 
@@ -44,21 +48,18 @@ projectRoute.get("/sort/high", async (req, res) => {
     try {
         let filter = {};
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            filter.project_theme = { $regex: search, $options: 'i' };
+            filter.reason = { $regex: search, $options: 'i' };
+            filter.type = { $regex: search, $options: 'i' };
+            filter.division = { $regex: search, $options: 'i' };
+            filter.category = { $regex: search, $options: 'i' };
+            filter.priority = { $regex: search, $options: 'i' };
+            filter.department = { $regex: search, $options: 'i' };
+            filter.start_date = { $regex: search, $options: 'i' };
+            filter.end_date = { $regex: search, $options: 'i' };
+            filter.location = { $regex: search, $options: 'i' };
+            filter.status = { $regex: search, $options: 'i' };
+
         }
 
         const count = await ProjectModel.find(filter).countDocuments();
@@ -103,22 +104,20 @@ projectRoute.get("/sort/low", async (req, res) => {
     try {
         let filter = {};
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            filter.project_theme = { $regex: search, $options: 'i' };
+            filter.reason = { $regex: search, $options: 'i' };
+            filter.type = { $regex: search, $options: 'i' };
+            filter.division = { $regex: search, $options: 'i' };
+            filter.category = { $regex: search, $options: 'i' };
+            filter.priority = { $regex: search, $options: 'i' };
+            filter.department = { $regex: search, $options: 'i' };
+            filter.start_date = { $regex: search, $options: 'i' };
+            filter.end_date = { $regex: search, $options: 'i' };
+            filter.location = { $regex: search, $options: 'i' };
+            filter.status = { $regex: search, $options: 'i' };
+
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -150,27 +149,26 @@ projectRoute.get("/sort/low", async (req, res) => {
         res.status(500).send("An error occurred");
     }
 });
-projectRoute.get("/sort/medium", async (req, res) => {
+
+
+projectRoute.get("/sort/project", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
         let filter = {};
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            filter.project_theme = { $regex: search, $options: 'i' };
+            filter.reason = { $regex: search, $options: 'i' };
+            filter.type = { $regex: search, $options: 'i' };
+            filter.division = { $regex: search, $options: 'i' };
+            filter.category = { $regex: search, $options: 'i' };
+            filter.priority = { $regex: search, $options: 'i' };
+            filter.department = { $regex: search, $options: 'i' };
+            filter.start_date = { $regex: search, $options: 'i' };
+            filter.end_date = { $regex: search, $options: 'i' };
+            filter.location = { $regex: search, $options: 'i' };
+            filter.status = { $regex: search, $options: 'i' };
+            // Add a search filter to match project_theme field using a case-insensitive regular expression
         }
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
@@ -180,20 +178,10 @@ projectRoute.get("/sort/medium", async (req, res) => {
                 $match: filter,
             },
             {
-                $addFields: {
-                    priorityOrder: {
-                        $switch: {
-                            branches: [
-                                { case: { $eq: ['$priority', 'Medium'] }, then: 0 },
-                                { case: { $eq: ['$priority', 'High'] }, then: 1 },
-                                { case: { $eq: ['$priority', 'Low'] }, then: 2 }
-                            ],
-                            default: 3
-                        }
-                    }
-                }
-            },
-            { $sort: { priorityOrder: 1 } }
+                $sort: { project_theme: 1 } // Sort project_theme in ascending alphabetical order
+            }
+
+
         ]).skip(skip)
             .limit(PAGE_SIZE);
         res.send({ data, totalPages });
