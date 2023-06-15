@@ -9,20 +9,25 @@ projectRoute.get("/", async (req, res) => {
     const skip = (page - 1) * PAGE_SIZE;
 
     try {
-        let filter = {};
-        if (search) {
-            filter.project_theme = { $regex: search, $options: 'i' };
-            filter.reason = { $regex: search, $options: 'i' };
-            filter.type = { $regex: search, $options: 'i' };
-            filter.division = { $regex: search, $options: 'i' };
-            filter.category = { $regex: search, $options: 'i' };
-            filter.priority = { $regex: search, $options: 'i' };
-            filter.department = { $regex: search, $options: 'i' };
-            filter.start_date = { $regex: search, $options: 'i' };
-            filter.end_date = { $regex: search, $options: 'i' };
-            filter.location = { $regex: search, $options: 'i' };
-            filter.status = { $regex: search, $options: 'i' };
+        const filter = {}; // Create an empty filter object
 
+        if (search) {
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
 
         const count = await ProjectModel.find(filter).countDocuments();
@@ -46,20 +51,25 @@ projectRoute.get("/sort/high", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
-        if (search) {
-            filter.project_theme = { $regex: search, $options: 'i' };
-            filter.reason = { $regex: search, $options: 'i' };
-            filter.type = { $regex: search, $options: 'i' };
-            filter.division = { $regex: search, $options: 'i' };
-            filter.category = { $regex: search, $options: 'i' };
-            filter.priority = { $regex: search, $options: 'i' };
-            filter.department = { $regex: search, $options: 'i' };
-            filter.start_date = { $regex: search, $options: 'i' };
-            filter.end_date = { $regex: search, $options: 'i' };
-            filter.location = { $regex: search, $options: 'i' };
-            filter.status = { $regex: search, $options: 'i' };
+        const filter = {}; // Create an empty filter object
 
+        if (search) {
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
 
         const count = await ProjectModel.find(filter).countDocuments();
@@ -102,20 +112,25 @@ projectRoute.get("/sort/low", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
-        if (search) {
-            filter.project_theme = { $regex: search, $options: 'i' };
-            filter.reason = { $regex: search, $options: 'i' };
-            filter.type = { $regex: search, $options: 'i' };
-            filter.division = { $regex: search, $options: 'i' };
-            filter.category = { $regex: search, $options: 'i' };
-            filter.priority = { $regex: search, $options: 'i' };
-            filter.department = { $regex: search, $options: 'i' };
-            filter.start_date = { $regex: search, $options: 'i' };
-            filter.end_date = { $regex: search, $options: 'i' };
-            filter.location = { $regex: search, $options: 'i' };
-            filter.status = { $regex: search, $options: 'i' };
+        const filter = {}; // Create an empty filter object
 
+        if (search) {
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
 
         const count = await ProjectModel.find(filter).countDocuments();
@@ -155,21 +170,27 @@ projectRoute.get("/sort/project", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
+        const filter = {}; // Create an empty filter object
+
         if (search) {
-            filter.project_theme = { $regex: search, $options: 'i' };
-            filter.reason = { $regex: search, $options: 'i' };
-            filter.type = { $regex: search, $options: 'i' };
-            filter.division = { $regex: search, $options: 'i' };
-            filter.category = { $regex: search, $options: 'i' };
-            filter.priority = { $regex: search, $options: 'i' };
-            filter.department = { $regex: search, $options: 'i' };
-            filter.start_date = { $regex: search, $options: 'i' };
-            filter.end_date = { $regex: search, $options: 'i' };
-            filter.location = { $regex: search, $options: 'i' };
-            filter.status = { $regex: search, $options: 'i' };
-            // Add a search filter to match project_theme field using a case-insensitive regular expression
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -196,24 +217,27 @@ projectRoute.get("/status/running", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
+        const filter = {}; // Create an empty filter object
+
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -250,24 +274,27 @@ projectRoute.get("/status/close", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
+        const filter = {}; // Create an empty filter object
+
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -303,24 +330,27 @@ projectRoute.get("/status/cancel", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
+        const filter = {}; // Create an empty filter object
+
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -356,24 +386,27 @@ projectRoute.get("/start/date", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
+        const filter = {}; // Create an empty filter object
+
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
@@ -400,24 +433,27 @@ projectRoute.get("/end/date", async (req, res) => {
     const { page = 1, search } = req.query;
     const skip = (page - 1) * PAGE_SIZE;
     try {
-        let filter = {};
+        const filter = {}; // Create an empty filter object
+
         if (search) {
-            filter = {
-                $or: [
-                    { project_theme: { $regex: search, $options: "i" } },
-                    { reason: { $regex: search, $options: "i" } },
-                    { type: { $regex: search, $options: "i" } },
-                    { division: { $regex: search, $options: "i" } },
-                    { category: { $regex: search, $options: "i" } },
-                    { priority: { $regex: search, $options: "i" } },
-                    { department: { $regex: search, $options: "i" } },
-                    { start_date: { $regex: search, $options: "i" } },
-                    { end_date: { $regex: search, $options: "i" } },
-                    { location: { $regex: search, $options: "i" } },
-                    { status: { $regex: search, $options: "i" } },
-                ],
-            };
+            const searchRegex = new RegExp(search, 'i');
+            filter.$or = [
+                { project_theme: searchRegex },
+                { reason: searchRegex },
+                { type: searchRegex },
+                { division: searchRegex },
+                { category: searchRegex },
+                { priority: searchRegex },
+                { department: searchRegex },
+                { start_date: searchRegex },
+                { end_date: searchRegex },
+
+                { location: searchRegex },
+                { status: searchRegex },
+            ];
+            // Add a search filter to match any of the fields using a case-insensitive regular expression
         }
+
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
