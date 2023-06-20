@@ -126,7 +126,6 @@ projectRoute.get("/sort/low", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -184,7 +183,6 @@ projectRoute.get("/sort/project", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -231,7 +229,6 @@ projectRoute.get("/status/running", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -288,7 +285,6 @@ projectRoute.get("/status/close", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -344,7 +340,6 @@ projectRoute.get("/status/cancel", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -400,7 +395,6 @@ projectRoute.get("/start/date", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -447,7 +441,6 @@ projectRoute.get("/end/date", async (req, res) => {
                 { department: searchRegex },
                 { start_date: searchRegex },
                 { end_date: searchRegex },
-
                 { location: searchRegex },
                 { status: searchRegex },
             ];
@@ -509,6 +502,12 @@ projectRoute.get("/dashboard", async (req, res) => {
             status: "Closed",
         });
 
+        const currentDate = new Date();
+        const closureDelayProjects = Total.filter((project) => {
+            const endDate = new Date(project.end_date); // Convert endDate string to Date object
+            return endDate < currentDate && project.status === "Running";
+        });
+        const closureDelayCount = closureDelayProjects.length;
         const Running = await ProjectModel.find({ status: "Running" });
         const Registered = await ProjectModel.find({ status: "Registered" });
         const Canceled = await ProjectModel.find({ status: "Cancelled" });
@@ -518,6 +517,7 @@ projectRoute.get("/dashboard", async (req, res) => {
             Registered: Registered.length,
             Canceled: Canceled.length,
             Closed: Closed.length,
+            closureDelay: closureDelayCount,
             Total: Total.length,
             Total_FIN: Total_FIN.length,
             Total_FIN_Closed: Total_FIN_Closed.length,
