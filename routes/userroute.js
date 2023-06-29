@@ -11,33 +11,41 @@ const usersRoute = express.Router()
 
 // userroute.use(express.json())
 usersRoute.post("/register", async (req, res) => {
-    const payload = req.body
+    const { name, email, password } = req.body
     try {
-        const user = new UserModel(payload)
-        await user.save()
-        res.send("success")
-    }
-    catch (err) {
-        res.send(err)
+        bcrypt.hash(password, 8, async (err, hash) => {
+            const user = new UserModel({ name, email, password: hash })
+            await user.save()
+            res.send("Registered")
+        });
+    } catch (err) {
+        res.send("er", err)
+        console.log(err)
     }
 })
 
 usersRoute.post("/login", async (req, res) => {
-    const { email, password } = req.body
+    const { email, password } = req.body;
     try {
-        const data = await UserModel.find({ email })
-        if (data.length > 0 && data[0].password === password) {
-            res.send("sucess")
+        const user = await UserModel.find({ email })
+        if (user.length > 0) {
+            bcrypt.compare(password, user[0].password, (er, result) => {
+                if (er) {
+                    res.send("something error")
+                } else {
+                    const token = jwt.sign({ userId: user[0]._id }, "masai");
+                    res.send({ "sucess": "login successfully", "token": token })
+                }
+            })
         }
         else {
-            res.send("Invalid Credentials")
+            res.send("error")
         }
-    }
-    catch (err) {
-        res.send(err)
+
+    } catch (er) {
+        res.send("something error")
     }
 })
-
 module.exports = {
     usersRoute
-}
+};
