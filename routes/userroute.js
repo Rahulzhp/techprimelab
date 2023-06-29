@@ -27,25 +27,25 @@ usersRoute.post("/register", async (req, res) => {
 usersRoute.post("/login", async (req, res) => {
     const { email, password } = req.body;
     try {
-        const user = await UserModel.find({ email })
-        if (user.length > 0) {
-            bcrypt.compare(password, user[0].password, (er, result) => {
-                if (er) {
-                    res.send("something error")
-                } else {
-                    const token = jwt.sign({ userId: user[0]._id }, "masai");
-                    res.send({ "sucess": "login successfully", "token": token })
-                }
-            })
-        }
-        else {
-            res.send("error")
-        }
+        const user = await UserModel.findOne({ email }); // Use findOne instead of find
 
-    } catch (er) {
-        res.send("something error")
+        if (user) {
+            bcrypt.compare(password, user.password, (err, result) => {
+                if (result) {
+                    const token = jwt.sign({ userId: user._id }, "masai");
+                    res.send({ success: "Login successfully", token });
+                } else {
+                    res.send("Invalid password"); // Send an error message for incorrect password
+                }
+            });
+        } else {
+            res.send("Invalid email"); // Send an error message for invalid email
+        }
+    } catch (err) {
+        res.send("Something went wrong");
     }
-})
+});
+
 module.exports = {
     usersRoute
 };
