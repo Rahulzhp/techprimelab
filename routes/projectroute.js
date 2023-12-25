@@ -69,9 +69,8 @@ projectRoute.get("/sort/high", async (req, res) => {
                 { location: searchRegex },
                 { status: searchRegex },
             ];
-            // Add a search filter to match any of the fields using a case-insensitive regular expression
-        }
 
+        }
         const count = await ProjectModel.find(filter).countDocuments();
         const totalPages = Math.ceil(count / PAGE_SIZE);
 
